@@ -64,6 +64,7 @@ function setup() {
   comecarAnimacao.position(20, canvasHeight - 50);
   comecarAnimacao.mousePressed(comecarTimer);
 
+  rastro = []
 }
 
 function draw() {
@@ -82,7 +83,7 @@ function draw() {
   alturaInicial = float(inputAlturaInicial.value());
 
   let marca = (alcanceHorizontal(velocidadeSaida, angulo, alturaInicial) / escala).toFixed(2);
-  let tempoLancamento = tempoDeVoo(velocidadeSaida, angulo);
+  let tempoLancamento = (tempoDeVoo(velocidadeSaida, angulo, alturaInicial)).toFixed(2);
   let maiorAltura = (alturaInicial + pow((velocidadeSaida * sin(radians(angulo))), 2) / (2 * g)).toFixed(2);
 
   fill('black');
@@ -97,25 +98,32 @@ function draw() {
 
   text("Marca: " + marca + "m", width - 400, 300);
   text("Maior altura: " + maiorAltura + "m", width - 400, 320);
+  text("Tempo de Voo: " + tempoLancamento + "s", width - 400, 340);
   if (timerUp) {
     tempoPassado = (millis() - tempoComecouTimer) / 1000;
     let tempoTotal = tempoDeVoo(velocidadeSaida, angulo, alturaInicial);
     if (tempoPassado >= tempoTotal) {
       tempoPassado = tempoTotal;
-      timerUp = false; // Para o cronômetro
+      timerUp = false;
     }
     posY = chaoY - (posicaoY(0, velocidadeSaida, tempoPassado, angulo, alturaInicial)) - dElipse / 2;
     posX = (posicaoX(velocidadeSaida, tempoPassado, angulo)) + 100;
+
+    rastro.push({ x: posX, y: posY });
+
   }
   fill('black');
   circle(posX, posY, dElipse);
   fill('green');
   square(0, chaoY, width);
 
-
+  for (let ponto of rastro) {
+    circle(ponto.x, ponto.y, 2);
+  }
 }
 
 function comecarTimer() {
   tempoComecouTimer = millis();
   timerUp = true;
+  rastro = []
 }
