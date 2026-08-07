@@ -64,6 +64,8 @@ function setup() {
   comecarAnimacao.position(20, canvasHeight - 50);
   comecarAnimacao.mousePressed(comecarTimer);
 
+  somJogar = loadSound('assets/simple-whoosh.mp3');
+
   rastro = []
 }
 
@@ -113,17 +115,18 @@ function draw() {
 
   }
   fill('black');
+  for (let ponto of rastro) {
+    circle(ponto.x, ponto.y, 5);
+  }
   circle(posX, posY, dElipse);
   fill('green');
   square(0, chaoY, width);
 
-  for (let ponto of rastro) {
-    circle(ponto.x, ponto.y, 2);
-  }
 }
 
 function comecarTimer() {
   tempoComecouTimer = millis();
   timerUp = true;
+  somJogar.play();
   rastro = []
 }
